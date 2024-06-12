@@ -173,13 +173,13 @@ const EditEmployee = () => {
 				console.log(employeeData.photo);
 				setImagePreview(employeeData.photo);
 				setIsChecked(employeeData.empStatus);
-				console.log(employeeData.empStatus);
+				//console.log(employeeData.empStatus);
 				//const blob = await fetch(employeeData.photo).then(r => r.blob());
-				const file = await fetch(employeeData.photo).then(r => r.blob()).then(blobFile => new File([blobFile], "photo", { type: "image/png" }));
+				//const file = await fetch(employeeData.photo).then(r => r.blob()).then(blobFile => new File([blobFile], "photo", { type: "image/png" }));
 				//const photostr = "data:image/jpeg;base64," + employeeData.photo;
 				setEmployee(employeeData);
-				setEmployee({ ...employee, photo: file });
-				console.log(file);
+				//setEmployee({ ...employee, photo: file });
+				//console.log(file);
 				console.log(employeeData.departmentId)
 				console.log(selectedCompany);
 				console.log(employee);
