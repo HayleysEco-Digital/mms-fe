@@ -328,12 +328,13 @@ export async function deleteEmployee(empId) {
 
 export async function deleteOrder(empId, mealId, orderDate) {
 	try {
-		const result = await api.delete(`/employees/delete/employee/${empId}`, {
+		console.log(mealId);
+		const result = await api.delete(`/orders/delete/${empId}/${mealId}/${orderDate}`, {
 			headers: getHeader()
 		})
 		return result.data
 	} catch (error) {
-		throw new Error(`Error deleting Employee ${error.message}`)
+		throw new Error(`Error deleting Order ${error.message}`)
 	}
 }
 
