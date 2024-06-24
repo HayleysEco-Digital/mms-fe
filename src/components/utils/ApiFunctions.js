@@ -31,7 +31,10 @@ export async function addRoom(photo, roomType, roomPrice) {
 	formData.append("roomPrice", roomPrice)
 
 	const response = await api.post("/rooms/add/new-room", formData,{
-		headers: getHeader2()
+		headers: {
+			...getHeader2(),
+			"ngrok-skip-browser-warning": "69420",
+		}
 	})
 	if (response.status === 201) {
 		return true
@@ -47,7 +50,10 @@ export async function addMeal(mealType, mealPrice) {
 	formData.append("mealPrice", mealPrice)
 
 	const response = await api.post("/meals/add/new-meal", formData,{
-		headers: getHeader()
+		headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}
 	})
 	if (response.status === 201) {
 		return true
@@ -62,7 +68,10 @@ export async function addCompany(name) {
 	formData.append("name", name)
 
 	const response = await api.post("/companies/add/new-company", formData,{
-		headers: getHeader()
+		headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}
 	})
 	if (response.status === 201) {
 		return true
@@ -77,7 +86,10 @@ export async function addDepartment(name) {
 	formData.append("name", name)
 
 	const response = await api.post("/departments/add/new-department", formData,{
-		headers: getHeader()
+		headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}
 	})
 	if (response.status === 201) {
 		return true
@@ -91,7 +103,10 @@ export async function addDivision(name) {
 	formData.append("name", name)
 
 	const response = await api.post("/divisions/add/new-division", formData,{
-		headers: getHeader()
+		headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}
 	})
 	if (response.status === 201) {
 		return true
@@ -105,7 +120,10 @@ export async function addContractor(name) {
 	formData.append("name", name)
 
 	const response = await api.post("/contractors/add/new-contractor", formData,{
-		headers: getHeader()
+		headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}
 	})
 	if (response.status === 201) {
 		return true
@@ -152,7 +170,10 @@ export async function addEmployee(empNo, empFirstName, empLastName, empType, emp
 	console.log(photo);
 
 	const response = await api.post("/employees/add/new-employee-new", formData,{
-		headers: getHeader2()
+		headers: {
+			...getHeader2(),
+			"ngrok-skip-browser-warning": "69420",
+		}
 	})
 	if (response.status === 201) {
 		return true
@@ -174,7 +195,10 @@ export async function getRoomTypes() {
 export async function getAllRooms() {
 	try {
 		const result = await api.get("/rooms/all-rooms", {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return result.data
 	} catch (error) {
@@ -186,7 +210,10 @@ export async function getAllRooms() {
 export async function getAllMeals() {
 	try {
 		const result = await api.get("/meals/all-meals", {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return result.data
 	} catch (error) {
@@ -198,7 +225,10 @@ export async function getAllMeals() {
 export async function getAllCompanies() {
 	try {
 		const result = await api.get("/companies/all-companies", {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return result.data
 	} catch (error) {
@@ -210,7 +240,10 @@ export async function getAllCompanies() {
 export async function getAllDepartments() {
 	try {
 		const result = await api.get("/departments/all-departments", {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return result.data
 	} catch (error) {
@@ -221,7 +254,10 @@ export async function getAllDepartments() {
 export async function getAllDivisions() {
 	try {
 		const result = await api.get("/divisions/all-divisions", {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return result.data
 	} catch (error) {
@@ -232,7 +268,10 @@ export async function getAllDivisions() {
 export async function getAllContractors() {
 	try {
 		const result = await api.get("/contractors/all-contractors", {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return result.data
 	} catch (error) {
@@ -261,7 +300,10 @@ export async function getAllEmployees() {
 export async function getAllOrders() {
 	try {
 		const result = await api.get("/orders/all-orders", {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		console.log(result.data);
 		return result.data
@@ -275,7 +317,10 @@ export async function getMealCountByDate(date) {
 	try {
 		const result = await api.get("/orders/count-by-date", {
 			params: {date},
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		console.log(result.data);
 		return result.data
@@ -291,7 +336,10 @@ export const getMealsByDateRange = async (startDate, endDate) => {
             startDate,
             endDate
         },
-		headers: getHeader()
+		headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}
     });
     return response.data;
 };
@@ -302,7 +350,10 @@ export const getTotalMealsByContractorAndDateRange = async (startDate, endDate) 
             startDate,
             endDate
         },
-		headers: getHeader()
+		headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}
     });
     return response.data;
 };
@@ -310,7 +361,10 @@ export const getTotalMealsByContractorAndDateRange = async (startDate, endDate) 
 export async function deleteRoom(roomId) {
 	try {
 		const result = await api.delete(`/rooms/delete/room/${roomId}`, {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return result.data
 	} catch (error) {
@@ -322,7 +376,10 @@ export async function deleteRoom(roomId) {
 export async function deleteEmployee(empId) {
 	try {
 		const result = await api.delete(`/employees/delete/employee/${empId}`, {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return result.data
 	} catch (error) {
@@ -334,7 +391,10 @@ export async function deleteOrder(empId, mealId, orderDate) {
 	try {
 		console.log(mealId);
 		const result = await api.delete(`/orders/delete/${empId}/${mealId}/${orderDate}`, {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return result.data
 	} catch (error) {
@@ -346,7 +406,10 @@ export async function deleteOrder(empId, mealId, orderDate) {
 export async function deleteMeal(mealId) {
 	try {
 		const result = await api.delete(`/meals/delete/meal/${mealId}`, {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return result.data
 	} catch (error) {
@@ -358,7 +421,10 @@ export async function deleteMeal(mealId) {
 export async function deleteCompany(companyId) {
 	try {
 		const result = await api.delete(`/companies/delete/company/${companyId}`, {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return result.data
 	} catch (error) {
@@ -370,7 +436,10 @@ export async function deleteCompany(companyId) {
 export async function deleteDepartment(departmentId) {
 	try {
 		const result = await api.delete(`/departments/delete/department/${departmentId}`, {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return result.data
 	} catch (error) {
@@ -381,7 +450,10 @@ export async function deleteDepartment(departmentId) {
 export async function deleteDivision(divisionId) {
 	try {
 		const result = await api.delete(`/divisions/delete/division/${divisionId}`, {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return result.data
 	} catch (error) {
@@ -392,7 +464,10 @@ export async function deleteDivision(divisionId) {
 export async function deleteContractor(contractorId) {
 	try {
 		const result = await api.delete(`/contractors/delete/contractor/${contractorId}`, {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return result.data
 	} catch (error) {
@@ -408,7 +483,10 @@ export async function updateRoom(roomId, roomData) {
 	formData.append("photo", roomData.photo)
 	console.log(formData)
 	const response = await api.put(`/rooms/update/${roomId}`, formData,{
-		headers: getHeader2()
+		headers: {
+			...getHeader2(),
+			"ngrok-skip-browser-warning": "69420",
+		}
 	})
 	return response
 }
@@ -420,7 +498,10 @@ export async function updateMeal(mealId, mealData) {
 	formData.append("mealPrice", mealData.mealPrice)
 	console.log(formData)
 	const response = await api.put(`/meals/update/${mealId}`, formData,{
-		headers: getHeader()
+		headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}
 	})
 	return response
 }
@@ -431,7 +512,10 @@ export async function updateCompany(companyId, companyData) {
 	formData.append("name", companyData.name)
 	console.log(formData)
 	const response = await api.put(`/companies/update/${companyId}`, formData,{
-		headers: getHeader()
+		headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}
 	})
 	return response
 }
@@ -442,7 +526,10 @@ export async function updateDepartment(departmentId, departmentData) {
 	formData.append("name", departmentData.name)
 	//console.log(formData)
 	const response = await api.put(`/departments/update/${departmentId}`, formData,{
-		headers: getHeader()
+		headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}
 	})
 	return response
 }
@@ -452,7 +539,10 @@ export async function updateDivision(divisionId, divisionData) {
 	formData.append("name", divisionData.name)
 	//console.log(formData)
 	const response = await api.put(`/divisions/update/${divisionId}`, formData,{
-		headers: getHeader()
+		headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}
 	})
 	return response
 }
@@ -462,7 +552,10 @@ export async function updateContractor(contractorId, contractorData) {
 	formData.append("name", contractorData.name)
 	//console.log(formData)
 	const response = await api.put(`/contractors/update/${contractorId}`, formData,{
-		headers: getHeader()
+		headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}
 	})
 	return response
 }
@@ -510,7 +603,10 @@ export async function updateEmployee(empNo, employeeData) {
 
 
 	const response = await api.put(`/employees/update/${empNo}`, formData,{
-		headers: getHeader2()
+		headers: {
+			...getHeader2(),
+			"ngrok-skip-browser-warning": "69420",
+		}
 	})
 	return response
 }
@@ -529,7 +625,10 @@ export async function getRoomById(roomId) {
 export async function getMealById(mealId) {
 	try {
 		//console.log(mealId);
-		const result = await api.get(`/meals/meal/${mealId}`, {headers: getHeader()})
+		const result = await api.get(`/meals/meal/${mealId}`, {headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}})
 		return result.data
 	} catch (error) {
 		throw new Error(`Error fetching meal ${error.message}`)
@@ -540,7 +639,10 @@ export async function getMealById(mealId) {
 export async function getCompanyById(companyId) {
 	try {
 		//console.log(mealId);
-		const result = await api.get(`/companies/company/${companyId}`, {headers: getHeader()})
+		const result = await api.get(`/companies/company/${companyId}`, {headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}})
 		return result.data
 	} catch (error) {
 		throw new Error(`Error fetching Company ${error.message}`)
@@ -551,7 +653,10 @@ export async function getCompanyById(companyId) {
 export async function getDepartmentById(departmentId) {
 	try {
 		//console.log(mealId);
-		const result = await api.get(`/departments/department/${departmentId}`, {headers: getHeader()})
+		const result = await api.get(`/departments/department/${departmentId}`, {headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}})
 		return result.data
 	} catch (error) {
 		throw new Error(`Error fetching Department ${error.message}`)
@@ -561,7 +666,10 @@ export async function getDepartmentById(departmentId) {
 export async function getDivisionById(divisionId) {
 	try {
 		//console.log(mealId);
-		const result = await api.get(`/divisions/division/${divisionId}`, {headers: getHeader()})
+		const result = await api.get(`/divisions/division/${divisionId}`, {headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}})
 		return result.data
 	} catch (error) {
 		throw new Error(`Error fetching Divisions ${error.message}`)
@@ -571,7 +679,10 @@ export async function getDivisionById(divisionId) {
 export async function getContractorById(contractorId) {
 	try {
 		//console.log(mealId);
-		const result = await api.get(`/contractors/contractor/${contractorId}`, {headers: getHeader()})
+		const result = await api.get(`/contractors/contractor/${contractorId}`, {headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}})
 		return result.data
 	} catch (error) {
 		throw new Error(`Error fetching Contractors ${error.message}`)
@@ -581,7 +692,10 @@ export async function getContractorById(contractorId) {
 /* This funcction gets a employee by the id */
 export async function getEmployeeById(empNo) {
 	try {
-		const result = await api.get(`/employees/employee/${empNo}`, {headers: getHeader()})
+		const result = await api.get(`/employees/employee/${empNo}`, {headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}})
 		console.log(result.data);
 		return result.data
 		
@@ -608,7 +722,10 @@ export async function bookRoom(roomId, booking) {
 export async function getAllBookings() {
 	try {
 		const result = await api.get("/bookings/all-bookings", {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return result.data
 	} catch (error) {
@@ -682,7 +799,10 @@ export async function loginUser(login) {
 export async function getUserProfile(userId, token) {
 	try {
 		const response = await api.get(`users/profile/${userId}`, {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return response.data
 	} catch (error) {
@@ -694,7 +814,10 @@ export async function getUserProfile(userId, token) {
 export async function deleteUser(userId) {
 	try {
 		const response = await api.delete(`/users/delete/${userId}`, {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return response.data
 	} catch (error) {
@@ -706,7 +829,10 @@ export async function deleteUser(userId) {
 export async function getUser(userId, token) {
 	try {
 		const response = await api.get(`/users/${userId}`, {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return response.data
 	} catch (error) {
@@ -718,7 +844,10 @@ export async function getUser(userId, token) {
 export async function getBookingsByUserId(userId, token) {
 	try {
 		const response = await api.get(`/bookings/user/${userId}/bookings`, {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
 		})
 		return response.data
 	} catch (error) {
