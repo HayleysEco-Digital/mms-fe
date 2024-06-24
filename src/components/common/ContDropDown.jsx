@@ -14,7 +14,10 @@ const ContDropdown = ({ onChange, value }) => {
     const fetchContractors = async () => {
         try {
             const response = await api.get('/contractors/all-contractors', {
-                headers: getHeader()
+                headers: {
+                    ...getHeader(),
+                    "ngrok-skip-browser-warning": "69420",
+                }
             });
             setContractors(response.data);
         } catch (error) {

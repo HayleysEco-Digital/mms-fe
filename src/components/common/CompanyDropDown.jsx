@@ -14,7 +14,10 @@ const CompanyDropdown = ({ onChange, value }) => {
     const fetchCompanies = async () => {
         try {
             const response = await api.get('/companies/all-companies', {
-                headers: getHeader()
+                headers: {
+                    ...getHeader(),
+                    "ngrok-skip-browser-warning": "69420",
+                }
             });
             setCompanies(response.data);
         } catch (error) {

@@ -14,7 +14,10 @@ const DivDropdown = ({ onChange, value }) => {
     const fetchDivisions = async () => {
         try {
             const response = await api.get('/divisions/all-divisions', {
-                headers: getHeader()
+                headers: {
+                    ...getHeader(),
+                    "ngrok-skip-browser-warning": "69420",
+                }
             });
             setDivisions(response.data);
         } catch (error) {

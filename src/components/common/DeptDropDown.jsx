@@ -13,7 +13,10 @@ const DeptDropdown = ({ onChange, value }) => {
     const fetchDepartments = async () => {
         try {
             const response = await api.get('/departments/all-departments', {
-                headers: getHeader()
+                headers: {
+                    ...getHeader(),
+                    "ngrok-skip-browser-warning": "69420",
+                }
             });
             setDepartments(response.data);
             console.log(departments)
