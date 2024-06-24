@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export const api = axios.create({
-	baseURL: "https://fd49-2402-4000-1200-b65c-6966-7902-b471-3db2.ngrok-free.app",
+	baseURL: "https://c808-2402-4000-1200-b65c-6966-7902-b471-3db2.ngrok-free.app",
 	headers: {
         "Content-Type": "application/json"
     }
@@ -244,7 +244,11 @@ export async function getAllContractors() {
 export async function getAllEmployees() {
 	try {
 		const result = await api.get("/employees/all-employees", {
-			headers: getHeader()
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
+			
 		})
 		console.log(result.data);
 		return result.data
