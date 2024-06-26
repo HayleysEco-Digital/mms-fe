@@ -1,20 +1,20 @@
-import React, { useState } from "react"
-import { addEmployee, addRoom } from "../utils/ApiFunctions"
-import RoomTypeSelector from "../common/RoomTypeSelector"
-import { Link } from "react-router-dom"
-import DatePicker from "../common/DatePickerComp"
-import CompanyDropdown from "../common/CompanyDropDown"
-import DeptDropdown from "../common/DeptDropDown"
-import DivDropdown from "../common/DivDropDown"
-import ContDropdown from "../common/ContDropDown"
-import toast, { Toaster } from "react-hot-toast"
+import React, { useState } from "react";
+import EXIF from 'exif-js';
+import { addEmployee, addRoom } from "../utils/ApiFunctions";
+import RoomTypeSelector from "../common/RoomTypeSelector";
+import { Link } from "react-router-dom";
+import DatePicker from "../common/DatePickerComp";
+import CompanyDropdown from "../common/CompanyDropDown";
+import DeptDropdown from "../common/DeptDropDown";
+import DivDropdown from "../common/DivDropDown";
+import ContDropdown from "../common/ContDropDown";
+import toast, { Toaster } from "react-hot-toast";
 
 const AddEmployee = () => {
     const [newEmployee, setNewEmployee] = useState({
         empNo: "",
         empFirstName: "",
         empLastName: "",
-        //empDOB: "",
         empType: "",
         empCompany: "",
         empDepartment: "",
@@ -23,11 +23,11 @@ const AddEmployee = () => {
         empContactNo: "",
         empStatus: true,
         photo: null
-    })
+    });
 
-    const [successMessage, setSuccessMessage] = useState("")
-    const [errorMessage, setErrorMessage] = useState("")
-    const [isChecked, setIsChecked] = useState(true)
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [isChecked, setIsChecked] = useState(true);
 
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedCompany, setSelectedCompany] = useState('');
@@ -41,134 +41,139 @@ const AddEmployee = () => {
     };
 
     const handleImageChange = (e) => {
-		const selectedImage = e.target.files[0]
-		setNewEmployee({ ...newEmployee, photo: selectedImage })
-		setImagePreview(URL.createObjectURL(selectedImage))
-	}
+        const selectedImage = e.target.files[0];
+
+        // Read EXIF data and correct the orientation if necessary
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                EXIF.getData(img, function () {
+                    const orientation = EXIF.getTag(this, 'Orientation');
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    switch (orientation) {
+                        case 6: // 90 degrees
+                            canvas.width = img.height;
+                            canvas.height = img.width;
+                            ctx.rotate(90 * Math.PI / 180);
+                            ctx.drawImage(img, 0, -img.height);
+                            break;
+                        case 8: // -90 degrees
+                            canvas.width = img.height;
+                            canvas.height = img.width;
+                            ctx.rotate(-90 * Math.PI / 180);
+                            ctx.drawImage(img, -img.width, 0);
+                            break;
+                        case 3: // 180 degrees
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            ctx.rotate(180 * Math.PI / 180);
+                            ctx.drawImage(img, -img.width, -img.height);
+                            break;
+                        default:
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            ctx.drawImage(img, 0, 0);
+                    }
+
+                    canvas.toBlob((blob) => {
+                        setNewEmployee({ ...newEmployee, photo: blob });
+                        setImagePreview(URL.createObjectURL(blob));
+                    });
+                });
+            };
+        };
+        reader.readAsDataURL(selectedImage);
+    };
 
     const handleDateSelect = (date) => {
         const year = date.getFullYear();
-        const month = ('0' + (date.getMonth() + 1)).slice(-2); // Adding leading zero if necessary
-        const day = ('0' + date.getDate()).slice(-2); // Adding leading zero if necessary
+        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+        const day = ('0' + date.getDate()).slice(-2);
         const dateString = `${year}-${month}-${day}`;
-        //setSelectedDate(date); // Receive the selected date from DatePickerComp and update the state
         setNewEmployee({ ...newEmployee, empDOB: dateString });
         setSelectedDate(date);
     };
 
     const handleCompanyChange = (companyId) => {
         setSelectedCompany(companyId);
-        console.log(selectedCompany);
-        console.log(companyId);
         setNewEmployee({ ...newEmployee, empCompany: companyId });
-        // Do something with the selected company ID
-        console.log(newEmployee);
     };
 
     const handleDepartmentChange = (departmentId) => {
         setSelectedDepartment(departmentId);
-        console.log(selectedDepartment);
-        console.log(departmentId);
         setNewEmployee({ ...newEmployee, empDepartment: departmentId });
-        // Do something with the selected company ID
-        console.log(newEmployee);
     };
 
     const handleDivisionChange = (divisionId) => {
         setSelectedDivision(divisionId);
-        console.log(selectedDivision);
-        console.log(divisionId);
         setNewEmployee({ ...newEmployee, empDivision: divisionId });
-        // Do something with the selected company ID
-        console.log(newEmployee);
     };
 
     const handleContractorChange = (contractorId) => {
         setSelectedContractor(contractorId);
-        console.log(selectedContractor);
-        console.log(contractorId);
         setNewEmployee({ ...newEmployee, empContractor: contractorId });
-        // Do something with the selected company ID
-        console.log(newEmployee);
     };
 
     const handleEmployeeInputChange = (e) => {
-        const name = e.target.name
-        //setNewEmployee({ ...newEmployee, [name]: value })
-
-       // console.log(name, value);
+        const name = e.target.name;
         if (name === "empStatus") {
             const checked = e.target.checked;
             setNewEmployee((prev) => ({ ...prev, empStatus: checked }));
             setIsChecked(checked);
-            console.log("Emp status in employee: ", checked);
-        }
-        // Check if the input is for the date picker component
-        else if (name === "empDOB") {
-            // If the input is for the date picker, update the value directly
-            //setNewEmployee({ ...newEmployee, empDOB: selectedDate });
-        } else {
-            // If the input is for other fields, update the value using spread operator
+        } else if (name !== "empDOB") {
             setNewEmployee({ ...newEmployee, [name]: e.target.value });
         }
-    }
-
+    };
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         try {
-            const success = await addEmployee(newEmployee.empNo, newEmployee.empFirstName, newEmployee.empLastName, newEmployee.empType, newEmployee.empContactNo, newEmployee.empCompany, newEmployee.empDepartment, newEmployee.empDivision, newEmployee.empStatus, newEmployee.photo, newEmployee.empContractor)
+            const success = await addEmployee(newEmployee.empNo, newEmployee.empFirstName, newEmployee.empLastName, newEmployee.empType, newEmployee.empContactNo, newEmployee.empCompany, newEmployee.empDepartment, newEmployee.empDivision, newEmployee.empStatus, newEmployee.photo, newEmployee.empContractor);
             if (success !== undefined) {
-                //setSuccessMessage("A new employee was  added successfully !")
                 toast.success("New employee added successfully");
                 setNewEmployee({
                     empNo: "",
                     empFirstName: "",
                     empLastName: "",
-                    //empDOB: "",
                     empType: "",
                     empCompany: "",
                     empDepartment: "",
                     empDivision: "",
                     empContactNo: "",
-                    empStatus: "",
+                    empStatus: true,
                     photo: null,
                     empContractor: ""
-                })
-                setErrorMessage("")
+                });
+                setErrorMessage("");
                 setSelectedDate(null);
                 setSelectedCompany('');
                 setSelectedDepartment('');
                 setSelectedDivision('');
                 setSelectedContractor('');
                 setImagePreview("");
-
             } else {
-                //setErrorMessage("Error adding new Employee")
-                toast.error("Error adding new Employee")
+                toast.error("Error adding new Employee");
             }
         } catch (error) {
-            setErrorMessage(error.message)
+            setErrorMessage(error.message);
         }
         setTimeout(() => {
-            setSuccessMessage("")
-            setErrorMessage("")
-        }, 3000)
-    }
+            setSuccessMessage("");
+            setErrorMessage("");
+        }, 3000);
+    };
 
     return (
         <>
             <section className="container mt-5 mb-5">
                 <div className="row justify-content-center">
                     <div className="col-md-8 col-lg-6">
-                        <Toaster/>
+                        <Toaster />
                         <h2 className="mt-5 mb-2">Add a New Employee</h2>
-                        {/* {successMessage && (
-                            <div className="alert alert-success fade show"> {successMessage}</div>
-                        )}
-
-                        {errorMessage && <div className="alert alert-danger fade show"> {errorMessage}</div>} */}
-
                         <form onSubmit={handleSubmit}>
                             <div className="mb-3">
                                 <label htmlFor="empNo" className="form-label">
@@ -200,7 +205,6 @@ const AddEmployee = () => {
                                     onChange={handleEmployeeInputChange}
                                 />
                             </div>
-
                             <div className="mb-3">
                                 <label htmlFor="empLastName" className="form-label">
                                     Last Name
@@ -215,36 +219,10 @@ const AddEmployee = () => {
                                     onChange={handleEmployeeInputChange}
                                 />
                             </div>
-
-                            {/* <div className="mb-3">
-                                <label htmlFor="empDOB" className="form-label">
-                                    DOB
-                                </label>
-                                <br />
-        
-                                <DatePicker
-                                    className="form-control"
-                                    id="empDOB"
-                                    name="empDOB"
-                                    value={newEmployee.empDOB}
-                                    onChange={handleDateSelect}
-                                    onDateSelect={handleDateSelect}
-                                />
-                            </div> */}
-
                             <div className="mb-3">
                                 <label htmlFor="empType" className="form-label">
                                     Type
                                 </label>
-                                {/* <input
-									 required
-                                     type="text"
-                                     className="form-control"
-                                     id="empType"
-                                     name="empType"
-                                     value={newEmployee.empType}
-                                     onChange={handleEmployeeInputChange}
-								/> */}
                                 <select
                                     required
                                     className="form-control"
@@ -258,140 +236,84 @@ const AddEmployee = () => {
                                     <option value="Contract">Contract</option>
                                 </select>
                             </div>
-
                             <div className="mb-3">
                                 <label htmlFor="empCompany" className="form-label">
                                     Company
                                 </label>
-                                {/* <input
-                                    required
-                                    type="text"
-                                    className="form-control"
-                                    id="empCompany"
-                                    name="empContactNo"
-                                    value={newEmployee.empContactNo}
-                                    onChange={handleEmployeeInputChange}
-                                /> */}
                                 <CompanyDropdown
                                     required
                                     className="form-control"
                                     id="empCompany"
                                     name="empCompany"
                                     value={newEmployee.empCompany}
-                                    onChange={handleCompanyChange} />
-
+                                    onChange={handleCompanyChange}
+                                />
                             </div>
-
                             <div className="mb-3">
                                 <label htmlFor="empDepartment" className="form-label">
                                     Department
                                 </label>
-                                {/* <input
-                                    required
-                                    type="text"
-                                    className="form-control"
-                                    id="empCompany"
-                                    name="empContactNo"
-                                    value={newEmployee.empContactNo}
-                                    onChange={handleEmployeeInputChange}
-                                /> */}
                                 <DeptDropdown
                                     required
                                     className="form-control"
                                     id="empDepartment"
                                     name="empDepartment"
                                     value={newEmployee.empDepartment}
-                                    onChange={handleDepartmentChange} />
+                                    onChange={handleDepartmentChange}
+                                />
                             </div>
-
                             <div className="mb-3">
                                 <label htmlFor="empDivision" className="form-label">
                                     Division
                                 </label>
-                                {/* <input
-                                    required
-                                    type="text"
-                                    className="form-control"
-                                    id="empCompany"
-                                    name="empContactNo"
-                                    value={newEmployee.empContactNo}
-                                    onChange={handleEmployeeInputChange}
-                                /> */}
                                 <DivDropdown
                                     required
                                     className="form-control"
                                     id="empDivision"
                                     name="empDivision"
                                     value={newEmployee.empDivision}
-                                    onChange={handleDivisionChange} />
-
+                                    onChange={handleDivisionChange}
+                                />
                             </div>
-
                             <div className="mb-3">
                                 <label htmlFor="empContractor" className="form-label">
                                     Contractor
                                 </label>
-                                {/* <input
-                                    required
-                                    type="text"
-                                    className="form-control"
-                                    id="empCompany"
-                                    name="empContactNo"
-                                    value={newEmployee.empContactNo}
-                                    onChange={handleEmployeeInputChange}
-                                /> */}
                                 <ContDropdown
                                     required
                                     className="form-control"
                                     id="empContractor"
                                     name="empContractor"
                                     value={newEmployee.empContractor}
-                                    onChange={handleContractorChange} />
-
-                            </div>
-
-                            <div className="mb-3 checkbox-wrapper-6">
-                                {/* <label htmlFor="empDivision" className="form-label">
-                                <input
-                                    required
-                                    type="checkbox"
-                                    //  className="form-control"
-                                    id="empStatus"
-                                    name="empStatus"
-                                    value={newEmployee.empStatus}
-                                    onChange={handleEmployeeInputChange}
+                                    onChange={handleContractorChange}
                                 />
-                                    Status
-                                </label> */}
-
+                            </div>
+                            <div className="mb-3 checkbox-wrapper-6">
                                 <label className="tgl-btn" htmlFor="empStatus">Status</label>
                                 <input className="tgl tgl-light" id="empStatus" name="empStatus" type="checkbox" checked={isChecked} onChange={handleEmployeeInputChange} />
                                 <label className="tgl-btn" htmlFor="empStatus"></label>
-
                             </div>
-
                             <div className="mb-3">
-								<label htmlFor="photo" className="form-label">
-									Employee Photo
-								</label>
-								<input
-									required
-									name="photo"
-									id="photo"
-									type="file"
-									className="form-control"
-									onChange={handleImageChange}
-								/>
-								{imagePreview && (
-									<img
-										src={imagePreview}
-										alt="Preview Employee Photo"
-										style={{ maxWidth: "400px", maxHeight: "400px" }}
-										className="mb-3"></img>
-								)}
-							</div>
-                            
-
+                                <label htmlFor="photo" className="form-label">
+                                    Employee Photo
+                                </label>
+                                <input
+                                    required
+                                    name="photo"
+                                    id="photo"
+                                    type="file"
+                                    className="form-control"
+                                    onChange={handleImageChange}
+                                />
+                                {imagePreview && (
+                                    <img
+                                        src={imagePreview}
+                                        alt="Preview Employee Photo"
+                                        style={{ maxWidth: "400px", maxHeight: "400px" }}
+                                        className="mb-3"
+                                    />
+                                )}
+                            </div>
                             <div className="mb-3">
                                 <label htmlFor="empContactNo" className="form-label">
                                     Contact No
@@ -419,7 +341,7 @@ const AddEmployee = () => {
                 </div>
             </section>
         </>
-    )
-}
+    );
+};
 
-export default AddEmployee
+export default AddEmployee;
