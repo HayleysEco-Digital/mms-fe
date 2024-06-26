@@ -1,7 +1,14 @@
 import axios from "axios"
 
+// export const api = axios.create({
+// 	baseURL: "https://luckily-humble-gobbler.ngrok-free.app",
+// 	headers: {
+//         "Content-Type": "application/json"
+//     }
+// })
+
 export const api = axios.create({
-	baseURL: "https://luckily-humble-gobbler.ngrok-free.app",
+	baseURL: "http://localhost:9192",
 	headers: {
         "Content-Type": "application/json"
     }
