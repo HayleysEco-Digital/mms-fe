@@ -45,6 +45,7 @@ import MealsByDateRange from "./components/order/MealsByDateRange"
 import MealsByContractorAndDateRange from "./components/order/MealsByContractorAndDateRange"
 import RegistrationNew from "./components/auth/SelfRegister"
 import SelfRegister from "./components/auth/SelfRegister"
+import EditProfile from "./components/auth/EditProfile"
 
 function App() {
 	return (
@@ -61,6 +62,7 @@ function App() {
 						<Route path="/edit-division/:divisionId" element={<EditDivision />} />
 						<Route path="/edit-contractor/:contractorId" element={<EditContractor />} />
 						<Route path="/edit-employee/:empNo" element={<EditEmployee />} />
+						<Route path="/edit-profile/:empNo" element={<EditProfile />} />
 						<Route path="/existing-rooms" element={<ExistingRooms />} />
 						<Route path="/existing-meals" element={<ExistingMeals />} />
 						<Route path="/existing-employees" element={<ExistingEmployees />} />

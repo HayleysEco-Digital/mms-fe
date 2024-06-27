@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { deleteUser, getBookingsByUserId, getUser } from "../utils/ApiFunctions"
-import { useNavigate } from "react-router-dom"
+import { deleteUser, getBookingsByUserId, getCompanyById, getDepartmentById, getDivisionById, getEmployeeById, getUser } from "../utils/ApiFunctions"
+import { Link, useNavigate } from "react-router-dom"
 import moment from "moment"
+import { FaEdit, FaEye } from "react-icons/fa"
 
 const Profile = () => {
 	const [user, setUser] = useState({
@@ -10,6 +11,21 @@ const Profile = () => {
 		firstName: "",
 		lastName: "",
 		roles: [{ id: "", name: "" }]
+	})
+
+	const [employee, setEmployee] = useState({
+		empNo: "",
+		empFirstName: "",
+		empLastName: "",
+		//empDOB: "",
+		empType: "",
+		empCompany: "",
+		empDepartment: "",
+		empDivision: "",
+		empContractor: "",
+		empContactNo: "",
+		empStatus: true,
+		photo: null
 	})
 
 	const [bookings, setBookings] = useState([
@@ -21,6 +37,9 @@ const Profile = () => {
 			bookingConfirmationCode: ""
 		}
 	])
+
+	const [image, setImage] = useState(null);
+
 	const [message, setMessage] = useState("")
 	const [errorMessage, setErrorMessage] = useState("")
 	const navigate = useNavigate()
@@ -33,7 +52,18 @@ const Profile = () => {
 			try {
 				const userData = await getUser(userId, token)
 				console.log(userData);
+				const employeeData = await getEmployeeById(userData.empNo);
+				const companyData = await getCompanyById(employeeData.companyId);
+				const departmentData = await getDepartmentById(employeeData.departmentId);
+				const divisionData = await getDivisionById(employeeData.divisionId);
+
+				console.log(employeeData);
 				setUser(userData)
+				setImage(employeeData.photo)
+				setEmployee(employeeData);
+				setEmployee({ ...employeeData, empCompany: companyData.name, empDepartment: departmentData.name, empDivision: divisionData.name })
+
+
 			} catch (error) {
 				console.error(error)
 			}
@@ -82,7 +112,7 @@ const Profile = () => {
 			{message && <p className="text-danger">{message}</p>}
 			{user ? (
 				<div className="card p-5 mt-5" style={{ backgroundColor: "whitesmoke" }}>
-					<h4 className="card-title text-center">User Information</h4>
+					<h4 className="card-title text-center">Employee Information</h4>
 					<div className="card-body">
 						<div className="col-md-10 mx-auto">
 							<div className="card mb-3 shadow">
@@ -90,7 +120,7 @@ const Profile = () => {
 									<div className="col-md-2">
 										<div className="d-flex justify-content-center align-items-center mb-4">
 											<img
-												src="https://themindfulaimanifesto.org/wp-content/uploads/2020/09/male-placeholder-image.jpeg"
+												src={`data:image/jpeg;base64,${image}`}
 												alt="Profile"
 												className="rounded-circle"
 												style={{ width: "150px", height: "150px", objectFit: "cover" }}
@@ -101,9 +131,9 @@ const Profile = () => {
 									<div className="col-md-10">
 										<div className="card-body">
 											<div className="form-group row">
-												<label className="col-md-2 col-form-label fw-bold">ID:</label>
+												<label className="col-md-2 col-form-label fw-bold">EMP No:</label>
 												<div className="col-md-10">
-													<p className="card-text">{user.id}</p>
+													<p className="card-text">{employee.empNo}</p>
 												</div>
 											</div>
 											<hr />
@@ -111,7 +141,7 @@ const Profile = () => {
 											<div className="form-group row">
 												<label className="col-md-2 col-form-label fw-bold">First Name:</label>
 												<div className="col-md-10">
-													<p className="card-text">{user.firstName}</p>
+													<p className="card-text">{employee.empFirstName}</p>
 												</div>
 											</div>
 											<hr />
@@ -119,31 +149,34 @@ const Profile = () => {
 											<div className="form-group row">
 												<label className="col-md-2 col-form-label fw-bold">Last Name:</label>
 												<div className="col-md-10">
-													<p className="card-text">{user.lastName}</p>
+													<p className="card-text">{employee.empLastName}</p>
 												</div>
 											</div>
 											<hr />
 
 											<div className="form-group row">
-												<label className="col-md-2 col-form-label fw-bold">Email:</label>
+												<label className="col-md-2 col-form-label fw-bold">Company:</label>
 												<div className="col-md-10">
-													<p className="card-text">{user.email}</p>
+													<p className="card-text">{employee.empCompany}</p>
 												</div>
 											</div>
 											<hr />
 
 											<div className="form-group row">
-												<label className="col-md-2 col-form-label fw-bold">Roles:</label>
+												<label className="col-md-2 col-form-label fw-bold">Dept:</label>
 												<div className="col-md-10">
-													<ul className="list-unstyled">
-														{user.roles.map((role) => (
-															<li key={role.id} className="card-text">
-																{role.name}
-															</li>
-														))}
-													</ul>
+													<p className="card-text">{employee.empDepartment}</p>
 												</div>
 											</div>
+											<hr />
+
+											<div className="form-group row">
+												<label className="col-md-2 col-form-label fw-bold">Division:</label>
+												<div className="col-md-10">
+													<p className="card-text">{employee.empDivision}</p>
+												</div>
+											</div>
+											<hr />
 										</div>
 									</div>
 								</div>
@@ -189,6 +222,13 @@ const Profile = () => {
 							)} */}
 
 							<div className="d-flex justify-content-center">
+								<div className="mx-2">
+									<Link to={`/edit-profile/${employee.empNo}`} className="gap-2">
+										<span className="btn btn-info btn-sm">
+										<FaEdit /> Edit Profile
+										</span>
+									</Link>
+								</div>
 								<div className="mx-2">
 									<button className="btn btn-danger btn-sm" onClick={handleDeleteAccount}>
 										Close account
