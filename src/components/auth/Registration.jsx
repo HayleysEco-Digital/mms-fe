@@ -1,13 +1,17 @@
 import React, { useState } from "react"
 import { registerUser } from "../utils/ApiFunctions"
-import { Link } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useAuth } from "./AuthProvider"
+import toast from "react-hot-toast"
 
 const Registration = () => {
 	const [registration, setRegistration] = useState({
+		empNo: "",
 		firstName: "",
 		lastName: "",
 		email: "",
-		password: ""
+		password: "",
+		isProfileCompleted: false,
 	})
 
 	const [errorMessage, setErrorMessage] = useState("")
@@ -17,13 +21,23 @@ const Registration = () => {
 		setRegistration({ ...registration, [e.target.name]: e.target.value })
 	}
 
+	const navigate = useNavigate()
+	const auth = useAuth()
+	const location = useLocation()
+	const redirectUrl = location.state?.path || "/login"
+
 	const handleRegistration = async (e) => {
 		e.preventDefault()
 		try {
 			const result = await registerUser(registration)
+			toast.success("New employee added and profile completed successfully");
+
+			setTimeout(() => {
+				navigate(redirectUrl, { replace: true });
+			}, 3000); 
 			setSuccessMessage(result)
 			setErrorMessage("")
-			setRegistration({ firstName: "", lastName: "", email: "", password: "" })
+			setRegistration({ empNo: "", firstName: "", lastName: "", email: "", password: "" })
 		} catch (error) {
 			setSuccessMessage("")
 			setErrorMessage(`Registration error : ${error.message}`)
@@ -41,6 +55,24 @@ const Registration = () => {
 
 			<h2>Register</h2>
 			<form onSubmit={handleRegistration}>
+
+			<div className="mb-3 row">
+					<label htmlFor="empNo" className="col-sm-2 col-form-label">
+						EMP No
+					</label>
+					<div className="col-sm-10">
+						<input
+							required
+							id="empNo"
+							name="empNo"
+							type="number"
+							className="form-control"
+							value={registration.empNo}
+							onChange={handleInputChange}
+						/>
+					</div>
+				</div>
+
 				<div className="mb-3 row">
 					<label htmlFor="firstName" className="col-sm-2 col-form-label">
 						First Name

@@ -1,18 +1,18 @@
 import axios from "axios"
 
-export const api = axios.create({
-	baseURL: "https://luckily-humble-gobbler.ngrok-free.app",
-	headers: {
-        "Content-Type": "application/json"
-    }
-})
-
 // export const api = axios.create({
-// 	baseURL: "http://localhost:9192",
+// 	baseURL: "https://luckily-humble-gobbler.ngrok-free.app",
 // 	headers: {
 //         "Content-Type": "application/json"
 //     }
 // })
+
+export const api = axios.create({
+	baseURL: "http://localhost:9192",
+	headers: {
+        "Content-Type": "application/json"
+    }
+})
 
 export const getHeader = () => {
 	const token = localStorage.getItem("token")
@@ -775,6 +775,7 @@ export async function getAvailableRooms(checkInDate, checkOutDate, roomType) {
 
 /* This function register a new user */
 export async function registerUser(registration) {
+	console.log(registration);
 	try {
 		const response = await api.post("/auth/register-user", registration)
 		return response.data
@@ -841,6 +842,21 @@ export async function getUser(userId, token) {
 				"ngrok-skip-browser-warning": "69420",
 			}
 		})
+		return response.data
+	} catch (error) {
+		throw error
+	}
+}
+
+export async function updateUserProfileCompletion(userId) {
+	try {
+		const response = await api.put(`/users/complete-profile/${userId}`, {
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			}
+		})
+		console.log(response.data);
 		return response.data
 	} catch (error) {
 		throw error

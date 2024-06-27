@@ -10,7 +10,7 @@ const ExistingEmployees = () => {
     const [filteredEmployees, setFilteredEmployees] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [employeesPerPage] = useState(8);
+    const [employeesPerPage] = useState(10);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");

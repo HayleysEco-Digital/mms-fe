@@ -149,6 +149,7 @@ const AddEmployee = () => {
             }
         } catch (error) {
             setErrorMessage(error.message)
+            toast.error(error.message + " \n\nEmployee already exists in the database.");
         }
         setTimeout(() => {
             setSuccessMessage("")

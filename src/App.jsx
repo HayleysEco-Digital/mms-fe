@@ -43,6 +43,8 @@ import AddContractor from "./components/contractor/AddContractor"
 import EditContractor from "./components/contractor/EditContractor"
 import MealsByDateRange from "./components/order/MealsByDateRange"
 import MealsByContractorAndDateRange from "./components/order/MealsByContractorAndDateRange"
+import RegistrationNew from "./components/auth/SelfRegister"
+import SelfRegister from "./components/auth/SelfRegister"
 
 function App() {
 	return (
@@ -115,6 +117,7 @@ function App() {
 
 						<Route path="/login" element={<Login />} />
 						<Route path="/register" element={<Registration />} />
+						<Route path="/self-register" element={<SelfRegister />} />
 
 						<Route path="/profile" element={<Profile />} />
 						<Route path="/logout" element={<FindBooking />} />
