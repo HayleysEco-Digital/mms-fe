@@ -32,12 +32,13 @@ const Registration = () => {
 			const result = await registerUser(registration)
 			toast.success("New employee added and profile completed successfully");
 
+			setRegistration({ empNo: "", firstName: "", lastName: "", email: "", password: "" })
 			setTimeout(() => {
 				navigate(redirectUrl, { replace: true });
 			}, 3000); 
 			setSuccessMessage(result)
 			setErrorMessage("")
-			setRegistration({ empNo: "", firstName: "", lastName: "", email: "", password: "" })
+			
 		} catch (error) {
 			setSuccessMessage("")
 			setErrorMessage(`Registration error : ${error.message}`)
