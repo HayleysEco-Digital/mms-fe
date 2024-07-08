@@ -141,16 +141,21 @@ export async function addContractor(name) {
 
 export const requestMeal = async (mealRequest) => {
 	try {
-		
 	  const response = await api.post("/orders/request", mealRequest, {
 		headers: {
-			...getHeader(),
-			"ngrok-skip-browser-warning": "69420",
+		  ...getHeader(),
+		  "ngrok-skip-browser-warning": "69420",
 		}
 	  });
 	  return response.data;
 	} catch (error) {
 	  console.error('Error submitting meal request:', error);
+  
+	  // Check for specific duplicate error and handle it
+	  if (error.response && error.response.status === 400) {
+		throw new Error('Duplicate order detected');
+	  }
+	  
 	  throw error;
 	}
   }

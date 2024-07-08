@@ -104,7 +104,12 @@ const RequestMeal = () => {
       await requestMeal(mealRequests);
       toast.success('Meal requests submitted successfully.');
     } catch (error) {
-      toast.error('Failed to submit meal requests.');
+      console.log(error);
+      if (error.response && error.response.status === 409) {
+        toast.error('Duplicate order: ' + error.response.data);
+      } else {
+        toast.error('Failed to submit meal requests.');
+      }
     }
   };
 
