@@ -46,6 +46,7 @@ import MealsByContractorAndDateRange from "./components/order/MealsByContractorA
 import RegistrationNew from "./components/auth/SelfRegister"
 import SelfRegister from "./components/auth/SelfRegister"
 import EditProfile from "./components/auth/EditProfile"
+import RequestMeal from "./components/mealrequest/RequestMeal"
 
 function App() {
 	return (
@@ -76,6 +77,8 @@ function App() {
 						<Route path="/existing-contractors" element={<ExistingContractors />} />
 						<Route path="/add-room" element={<AddRoom />} />
 						<Route path="/add-meal" element={<AddMeal />} />
+						<Route path="/request-meal" element={<RequestMeal />} />
+
 						<Route path="/add-company" element={<AddCompany />} />
 						<Route path="/add-department" element={<AddDepartment />} />
 						<Route path="/add-division" element={<AddDivision />} />

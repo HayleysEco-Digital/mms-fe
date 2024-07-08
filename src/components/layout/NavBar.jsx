@@ -52,6 +52,16 @@ const NavBar = () => {
 								</NavLink>
 							</li>
 						)}
+
+						{isLoggedIn && (
+
+							<li className="nav-item">
+								<NavLink className="nav-link" aria-current="page" to={"/request-meal"}>
+									Request Meals
+								</NavLink>
+							</li>
+						)}
+
 					</ul>
 
 					<ul className="d-flex navbar-nav">

@@ -1,18 +1,18 @@
 import axios from "axios"
 
-export const api = axios.create({
-	baseURL: "https://luckily-humble-gobbler.ngrok-free.app",
-	headers: {
-        "Content-Type": "application/json"
-    }
-})
-
 // export const api = axios.create({
-// 	baseURL: "http://localhost:9192",
+// 	baseURL: "https://luckily-humble-gobbler.ngrok-free.app",
 // 	headers: {
 //         "Content-Type": "application/json"
 //     }
 // })
+
+export const api = axios.create({
+	baseURL: "http://localhost:9192",
+	headers: {
+        "Content-Type": "application/json"
+    }
+})
 
 export const getHeader = () => {
 	const token = localStorage.getItem("token")
@@ -138,6 +138,22 @@ export async function addContractor(name) {
 		return false
 	}
 }
+
+export const requestMeal = async (mealRequest) => {
+	try {
+		
+	  const response = await api.post("/orders/request", mealRequest, {
+		headers: {
+			...getHeader(),
+			"ngrok-skip-browser-warning": "69420",
+		}
+	  });
+	  return response.data;
+	} catch (error) {
+	  console.error('Error submitting meal request:', error);
+	  throw error;
+	}
+  }
 
 /* This function adds a new employee to the database */
 export async function addEmployee(empNo, empFirstName, empLastName, empType, empContactNo, empCompany, empDepartment, empDivision, empStatus, photo, empContractor) {
