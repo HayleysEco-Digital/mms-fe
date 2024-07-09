@@ -671,6 +671,7 @@ export async function getCompanyById(companyId) {
 			...getHeader(),
 			"ngrok-skip-browser-warning": "69420",
 		}})
+		console.log(result.data)
 		return result.data
 	} catch (error) {
 		throw new Error(`Error fetching Company ${error.message}`)

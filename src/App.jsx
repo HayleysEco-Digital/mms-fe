@@ -47,6 +47,7 @@ import RegistrationNew from "./components/auth/SelfRegister"
 import SelfRegister from "./components/auth/SelfRegister"
 import EditProfile from "./components/auth/EditProfile"
 import RequestMeal from "./components/mealrequest/RequestMeal"
+import FreeMeal from "./components/mealrequest/FreeMeal"
 
 function App() {
 	return (
@@ -78,6 +79,7 @@ function App() {
 						<Route path="/add-room" element={<AddRoom />} />
 						<Route path="/add-meal" element={<AddMeal />} />
 						<Route path="/request-meal" element={<RequestMeal />} />
+						<Route path="/request-free-meal" element={<FreeMeal />} />
 
 						<Route path="/add-company" element={<AddCompany />} />
 						<Route path="/add-department" element={<AddDepartment />} />
