@@ -40,7 +40,7 @@ const RequestMeal = () => {
 
 			} catch (error) {
 				console.error(error)
-			}
+			} 
 		}
 
 		fetchUser()
