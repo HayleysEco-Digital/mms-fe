@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { deleteEmployee, getAllEmployees } from "../utils/ApiFunctions";
-import { Col, Row } from "react-bootstrap";
+import { Col, Row, Modal, Button } from "react-bootstrap";
 import RoomPaginator from "../common/RoomPaginator";
 import { FaEdit, FaEye, FaPlus, FaTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast"; // Import toast
 
 const ExistingEmployees = () => {
     const [employees, setEmployees] = useState([]);
@@ -12,8 +13,10 @@ const ExistingEmployees = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [employeesPerPage] = useState(10);
     const [isLoading, setIsLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
-    const [successMessage, setSuccessMessage] = useState("");
+
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [empIdToDelete, setEmpIdToDelete] = useState(null);
+    const [confirmationText, setConfirmationText] = useState("");
 
     useEffect(() => {
         fetchEmployees();
@@ -23,53 +26,57 @@ const ExistingEmployees = () => {
         setIsLoading(true);
         try {
             const result = await getAllEmployees();
-			console.log(result);
-            const updatedResult = result.map(employee => ({
-                ...employee
-            }));
+            const updatedResult = result.map(employee => ({ ...employee }));
             setEmployees(updatedResult);
             setFilteredEmployees(updatedResult); // Initially, set filteredEmployees to the full list
             setIsLoading(false);
         } catch (error) {
-            setErrorMessage(error.message);
+            toast.error(`Error fetching employees: ${error.message}`); // Display error message
             setIsLoading(false);
         }
     };
 
-    const handleDelete = async (empId) => {
-        try {
-            const result = await deleteEmployee(empId);
-            if (result === "") {
-                setSuccessMessage(`Employee ${empId} was deleted`);
-                fetchEmployees();
-            } else {
-                console.error(`Error deleting Employee : ${result.message}`);
-            }
-        } catch (error) {
-            setErrorMessage(error.message);
+    const handleDeleteClick = (empId) => {
+        setEmpIdToDelete(empId);
+        setShowConfirm(true); // Show confirmation modal
+    };
+
+    const confirmDelete = async () => {
+        if (confirmationText !== "DELETE") {
+            toast.error("Please type DELETE to confirm.");
+            return;
         }
-        setTimeout(() => {
-            setSuccessMessage("");
-            setErrorMessage("");
-        }, 3000);
+
+        try {
+            const result = await deleteEmployee(empIdToDelete);
+            if (result === "") {
+                toast.success(`Employee ${empIdToDelete} was successfully deleted!`);
+                fetchEmployees(); // Refresh employee list
+            } else {
+                toast.error(`Error deleting Employee: ${result.message}`);
+            }
+            setShowConfirm(false); // Close modal after deletion
+        } catch (error) {
+            toast.error(`Error: ${error.message}`);
+        } finally {
+            setConfirmationText(""); // Clear input field
+        }
     };
 
     const handleSearch = (e) => {
-		const query = e.target.value;
-		setSearchQuery(query);
-	
-		if (query === "") {
-			setFilteredEmployees(employees);
-			//console.log(employees);
-		} else {
-			const filtered = employees.filter(employee =>
-				employee.empNo.toString().toLowerCase().includes(query.toLowerCase())
-			);
-			setFilteredEmployees(filtered);
-		}
-		setCurrentPage(1); // Reset to first page on new search
-	};
-	
+        const query = e.target.value;
+        setSearchQuery(query);
+
+        if (query === "") {
+            setFilteredEmployees(employees);
+        } else {
+            const filtered = employees.filter(employee =>
+                employee.empNo.toString().toLowerCase().includes(query.toLowerCase())
+            );
+            setFilteredEmployees(filtered);
+        }
+        setCurrentPage(1); // Reset to first page on new search
+    };
 
     const handlePaginationClick = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -86,13 +93,10 @@ const ExistingEmployees = () => {
 
     return (
         <>
-            <div className="container col-md-8 col-lg-6">
-                {successMessage && <p className="alert alert-success mt-5">{successMessage}</p>}
-                {errorMessage && <p className="alert alert-danger mt-5">{errorMessage}</p>}
-            </div>
+            <Toaster position="top-right" reverseOrder={false} /> {/* Toaster for notifications */}
 
             {isLoading ? (
-                <p>Loading existing employees</p>
+                <p>Loading existing employees...</p>
             ) : (
                 <>
                     <section className="mt-5 mb-5 container">
@@ -146,7 +150,7 @@ const ExistingEmployees = () => {
                                             </Link>
                                             <button
                                                 className="btn btn-danger btn-sm ml-5"
-                                                onClick={() => handleDelete(employee.empNo)}>
+                                                onClick={() => handleDeleteClick(employee.empNo)}>
                                                 <FaTrashAlt />
                                             </button>
                                         </td>
@@ -162,6 +166,31 @@ const ExistingEmployees = () => {
                     </section>
                 </>
             )}
+
+            {/* Confirmation Modal */}
+            <Modal show={showConfirm} onHide={() => setShowConfirm(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Deletion</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>To delete this employee, type 'DELETE' below and Confirm. NOTE that you cannot UNDO this operation!</p>
+                    <input
+                        type="text"
+                        value={confirmationText}
+                        onChange={(e) => setConfirmationText(e.target.value)}
+                        className="form-control"
+                        placeholder="Type DELETE to confirm"
+                    />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowConfirm(false)}>
+                        Cancel
+                    </Button>
+                    <Button variant="danger" onClick={confirmDelete}>
+                        Confirm
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 };

@@ -5,6 +5,8 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { FaTrashAlt } from "react-icons/fa";
 import RoomPaginator from "../common/RoomPaginator"; // Ensure this path is correct
+import { Modal, Button, Form } from "react-bootstrap";
+import toast, { Toaster } from "react-hot-toast";
 
 const AllOrders = () => {
     const [orders, setOrders] = useState([]);
@@ -17,6 +19,11 @@ const AllOrders = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
+    
+    // Modal states
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [orderToDelete, setOrderToDelete] = useState(null);
+    const [confirmText, setConfirmText] = useState("");
 
     useEffect(() => {
         fetchOrders();
@@ -27,7 +34,6 @@ const AllOrders = () => {
         try {
             const result = await getAllOrders();
             console.log(result);
-
             const updatedResult = result.map(order => {
                 if (order.orderDate) {
                     const orderDateArray = order.orderDate;
@@ -48,7 +54,6 @@ const AllOrders = () => {
                 }
                 return { ...order };
             });
-
             setOrders(updatedResult);
             setFilteredOrders(updatedResult); // Initially, set filteredOrders to the full list
             setIsLoading(false);
@@ -58,22 +63,29 @@ const AllOrders = () => {
         }
     };
 
-    const handleDelete = async (empId, mealId, orderDate) => {
-        try {
-            const result = await deleteOrder(empId, mealId, orderDate);
-            if (result === "") {
-                setSuccessMessage(`Order was deleted`);
-                fetchOrders();
-            } else {
-                console.error(`Error deleting order: ${result.message}`);
+    const handleDeleteClick = (order) => {
+        setOrderToDelete(order);
+        setShowDeleteModal(true); // Open the modal
+    };
+
+    const handleConfirmDelete = async () => {
+        if (confirmText === "DELETE") {
+            try {
+                const result = await deleteOrder(orderToDelete.empId, orderToDelete.mealId, orderToDelete.orderDate);
+                if (result === "") {
+                    toast.success(`Order for Emp No ${orderToDelete.empId} was successfully deleted!`);
+                    fetchOrders(); // Refresh the orders list
+                } else {
+                    toast.error(`Error deleting order: ${result.message}`);
+                }
+            } catch (error) {
+                toast.error(`Error: ${error.message}`);
             }
-        } catch (error) {
-            setErrorMessage(error.message);
+        } else {
+            toast.error("You must type 'DELETE' to confirm.");
         }
-        setTimeout(() => {
-            setSuccessMessage("");
-            setErrorMessage("");
-        }, 3000);
+        setShowDeleteModal(false); // Close the modal after the action
+        setConfirmText(""); // Reset the confirmation text
     };
 
     const handleSearch = () => {
@@ -118,9 +130,9 @@ const AllOrders = () => {
         return Math.ceil(totalItems / itemsPerPage);
     };
 
-    const indexOfLastEmployee = currentPage * ordersPerPage;
-    const indexOfFirstEmployee = indexOfLastEmployee - ordersPerPage;
-    const currentOrders = filteredOrders.slice(indexOfFirstEmployee, indexOfLastEmployee);
+    const indexOfLastOrder = currentPage * ordersPerPage;
+    const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+    const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
 
     const exportToExcel = () => {
         const ws = XLSX.utils.json_to_sheet(filteredOrders);
@@ -131,6 +143,8 @@ const AllOrders = () => {
 
     return (
         <>
+            <Toaster position="top-right" reverseOrder={false} /> {/* Toaster for notifications */}
+
             <div className="container col-md-8 col-lg-6">
                 {successMessage && <p className="alert alert-success mt-5">{successMessage}</p>}
                 {errorMessage && <p className="alert alert-danger mt-5">{errorMessage}</p>}
@@ -203,33 +217,49 @@ const AllOrders = () => {
                                         <td>{order.isHalfPaid ? "Half Paid" : "Not Paid"}</td>
                                         <td>{order.amountPaid}</td>
                                         <td className="gap-2">
-                                            {/* <Link to={`/edit-order/${order.empNo}`} className="gap-2">
-                                                <span className="btn btn-info btn-sm">
-                                                    <FaEye />
-                                                </span>
-                                                <span className="btn btn-warning btn-sm ml-5">
-                                                    <FaEdit />
-                                                </span>
-                                            </Link> */}
-
-                                            {order.isMealIssued !== true && (
-                                                <button
-                                                    className="btn btn-danger btn-sm ml-5"
-                                                    onClick={() => handleDelete(order.empId, order.mealId, order.orderDate)}>
-                                                    <FaTrashAlt />
-                                                </button>
-                                            )}
+                                            <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => handleDeleteClick(order)} // Trigger delete confirmation
+                                            >
+                                                <FaTrashAlt />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
+
                         <RoomPaginator
                             currentPage={currentPage}
-                            totalPages={calculateTotalPages(ordersPerPage, filteredOrders)}
+                            itemsPerPage={ordersPerPage}
+                            totalItems={filteredOrders.length}
                             onPageChange={handlePaginationClick}
                         />
                     </section>
+
+                    {/* Delete Confirmation Modal */}
+                    <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Confirm Delete</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <p>Type "DELETE" to confirm deletion of order for Emp No {orderToDelete?.empId}. Make sure to delete orders which is not passed the order cancellation cut-off time.</p>
+                            <Form.Control
+                                type="text"
+                                value={confirmText}
+                                onChange={(e) => setConfirmText(e.target.value)}
+                                placeholder="Type 'DELETE' to confirm"
+                            />
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+                                Cancel
+                            </Button>
+                            <Button variant="danger" onClick={handleConfirmDelete}>
+                                Delete
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
                 </>
             )}
         </>
