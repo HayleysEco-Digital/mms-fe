@@ -41,7 +41,7 @@ const EditEmployee = () => {
 		//const photostr = "data:image/jpeg;base64," + selectedImage;
 		setEmployee({ ...employee, photo: selectedImage })
 		console.log(selectedImage);
-		
+
 		setImagePreview(URL.createObjectURL(selectedImage));
 		console.log(imagePreview);
 		//setImagePreview(selectedImage);
@@ -165,7 +165,7 @@ const EditEmployee = () => {
 				setSelectedDivision(employeeData.divisionId);
 				setSelectedContractor(employeeData.contractorId);
 
-				
+
 
 				console.log(employee);
 
@@ -231,7 +231,7 @@ const EditEmployee = () => {
 						// </div>
 						<Toaster/>
 					)} */}
-					<Toaster/>
+					<Toaster />
 					<form onSubmit={handleSubmit}>
 						<div className="mb-3">
 							<label htmlFor="empNo" className="form-label hotel-color">
@@ -317,6 +317,8 @@ const EditEmployee = () => {
 								<option value="">Select Employee Type</option>
 								<option value="Permanent">Permanent</option>
 								<option value="Contract">Contract</option>
+								<option value="Permanent-Manpower">Permanent-Manpower</option>
+								<option value="Intern">Intern</option>
 							</select>
 						</div>
 
