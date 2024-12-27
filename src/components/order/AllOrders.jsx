@@ -216,7 +216,7 @@ const AllOrders = () => {
                                         <td>{order.qty}</td>
                                         <td>
                                             {order.isHalfPaid
-                                                ? order.mealID === 2
+                                                ? order.mealID === "Breakfast"
                                                     ? "Full Paid"
                                                     : "Half Paid"
                                                 : "Not Paid"}
