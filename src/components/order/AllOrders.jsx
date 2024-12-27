@@ -19,7 +19,7 @@ const AllOrders = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
-    
+
     // Modal states
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [orderToDelete, setOrderToDelete] = useState(null);
@@ -214,7 +214,13 @@ const AllOrders = () => {
                                         <td>{order.isMealRequested ? "Ordered" : "Not Ordered"}</td>
                                         <td>{order.isMealIssued ? "Issued" : "Not Issued"}</td>
                                         <td>{order.qty}</td>
-                                        <td>{order.isHalfPaid ? "Half Paid" : "Not Paid"}</td>
+                                        <td>
+                                            {order.isHalfPaid
+                                                ? order.mealID === "Breakfast"
+                                                    ? "Full Paid"
+                                                    : "Half Paid"
+                                                : "Not Paid"}
+                                        </td>
                                         <td>{order.amountPaid}</td>
                                         <td className="gap-2">
                                             <button

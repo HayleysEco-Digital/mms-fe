@@ -108,7 +108,7 @@ const MealsByContractorAndDateRange = () => {
                                 <th>Meal Type</th>
                                 <th>Total Meals Ordered</th>
                                 <th>Total Meals Issued</th>
-                                <th>Half Paid Meals</th>
+                                <th>Paid Meals</th>
                                 <th>Credit Meals</th>
                             </tr>
                         </thead>
