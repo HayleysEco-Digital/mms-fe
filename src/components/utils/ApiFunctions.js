@@ -332,6 +332,27 @@ export async function getAllEmployees() {
 	}
 }
 
+/* This function gets paginated employees from the database */
+export async function getPaginatedEmployees(page = 0, pageSize = 10) {
+	try {
+		const result = await api.get("/employees/all-employees", {
+			headers: {
+				...getHeader(),
+				"ngrok-skip-browser-warning": "69420",
+			},
+			params: {
+				page,      // Current page number
+				pageSize,  // Number of items per page
+			},
+		});
+		console.log(result.data);
+		return result.data;
+	} catch (error) {
+		throw new Error("Error fetching Employees");
+	}
+}
+
+
 export async function getAllOrders() {
 	try {
 		const result = await api.get("/orders/all-orders", {
@@ -736,8 +757,14 @@ export async function getEmployeeById(empNo) {
 		return result.data
 		
 	} catch (error) {
-		throw new Error(`Error fetching Employee ${error.message}`)
-	}
+		if (error.response && error.response.status === 401) {
+		  // Return a custom error message when 401 occurs
+		  throw new Error('Employee number not found in the database');
+		} else {
+		  // Handle other types of errors
+		  throw new Error(`Error fetching Employee: ${error.message}`);
+		}
+	  }
 }
 
 /* This function saves a new booking to the databse */
