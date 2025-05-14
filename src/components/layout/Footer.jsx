@@ -8,7 +8,7 @@ const Footer = () => {
 			<Container>
 				<Row>
 					<Col xs={6} md={12}>	
-						<p className="mb-0"> &copy; {today.getFullYear()} Meal Management System - Hayleys Eco Solution v1.0.1-31.01.2025 <img className="company-logo" src="/Public/company-logo.jpeg" alt="logo" /></p>
+						<p className="mb-0"> &copy; {today.getFullYear()} Meal Management System - Hayleys Eco Solution v1.0.1-31.01.2025</p>
 					</Col>
 
 				</Row>
