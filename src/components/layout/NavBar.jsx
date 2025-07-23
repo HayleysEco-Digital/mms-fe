@@ -19,7 +19,7 @@ const NavBar = () => {
 		<nav className="navbar navbar-expand-lg bg-body-tertiary px-5 shadow mt-0 sticky-top">
 			<div className="container-fluid">
 				<Link to={"/"} className="navbar-brand">
-					<img className="logo" src="/Public/logo.png" alt="logo" />
+					<img className="logo" src="/public/logo.png" alt="logo" />
 					<span className="hotel-color logo-text">Meal Management System</span>
 				</Link>
 
