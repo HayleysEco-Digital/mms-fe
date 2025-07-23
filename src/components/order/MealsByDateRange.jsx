@@ -32,14 +32,19 @@ const MealsByDateRange = () => {
 
     const exportToExcel = () => {
         const filteredData = filterData();
-        const worksheet = XLSX.utils.json_to_sheet(filteredData.map(([empId, empName, mealId, totalOrdered, totalIssued, halfPaidMeals, creditIssuedMeals]) => ({
+        const worksheet = XLSX.utils.json_to_sheet(filteredData.map(([empId, empName, companyName, departmentName, divisionName, mealId, mealPrice, totalQty, totalValue, issuedQty, halfPaidQty, fullyPaidQty]) => ({
             'Employee No': empId,
             'Employee Name': empName,
+            'Company': companyName,
+            'Department': departmentName,
+            'Division': divisionName,
             'Meal Type': mealId === 1 ? 'Lunch' : mealId === 2 ? 'Breakfast' : mealId === 3 ? 'Dinner' : 'Unknown Meal',
-            'Total Meals Ordered': totalOrdered,
-            'Total Meals Issued': totalIssued,
-            'Half Paid Meals': halfPaidMeals,
-            'Credit Issued Meals': creditIssuedMeals
+            'Meal Price': mealPrice,
+            'Total Meals Ordered': totalQty,
+            'Total Value': totalValue,
+            'Total Meals Issued': issuedQty,
+            'Half Paid Meals': halfPaidQty,
+            'Credit Issued Meals': fullyPaidQty
         })));
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Meals Data');
@@ -50,23 +55,34 @@ const MealsByDateRange = () => {
     const csvHeaders = [
         { label: 'Employee No', key: 'empId' },
         { label: 'Employee Name', key: 'empName' },
+        { label: 'Company', key: 'companyName' },
+        { label: 'Department', key: 'departmentName' },
+        { label: 'Division', key: 'divisionName' },
         { label: 'Meal Type', key: 'mealType' },
-        { label: 'Total Meals Ordered', key: 'totalOrdered' },
-        { label: 'Total Meals Issued', key: 'totalIssued' },
-        { label: 'Half Paid Meals', key: 'halfPaidMeals' },
-        { label: 'Credit Issued Meals', key: 'creditIssuedMeals' }
+        { label: 'Meal Price', key: 'mealPrice' },
+        { label: 'Total Meals Ordered', key: 'totalQty' },
+        { label: 'Total Value', key: 'totalValue' },
+        { label: 'Total Meals Issued', key: 'issuedQty' },
+        { label: 'Half Paid Meals', key: 'halfPaidQty' },
+        { label: 'Credit Issued Meals', key: 'fullyPaidQty' }
     ];
 
-    const csvData = filterData().map(([empId, empName, mealId, totalOrdered, totalIssued, halfPaidMeals, creditIssuedMeals]) => ({
+    const csvData = filterData().map(([empId, empName, companyName, departmentName, divisionName, mealId, mealPrice, totalQty, totalValue, issuedQty, halfPaidQty, fullyPaidQty]) => ({
         empId,
         empName,
+        companyName,
+        departmentName,
+        divisionName,
         mealType: mealId === 1 ? 'Lunch' : mealId === 2 ? 'Breakfast' : mealId === 3 ? 'Dinner' : 'Unknown Meal',
-        totalOrdered,
-        totalIssued,
-        halfPaidMeals,
-        creditIssuedMeals
+        mealPrice,
+        totalQty,
+        totalValue,
+        issuedQty,
+        halfPaidQty,
+        fullyPaidQty
     }));
-
+    
+//test comment
     return (
         <div className="container mt-5">
             <h2>Meals Ordered and Issued By Date Range</h2>
@@ -129,23 +145,33 @@ const MealsByDateRange = () => {
                             <tr>
                                 <th>Employee No</th>
                                 <th>Employee Name</th>
+                                <th>Company</th>
+                                <th>Department</th>
+                                <th>Division</th>
                                 <th>Meal Type</th>
+                                <th>Meal Price</th>
                                 <th>Total Meals Ordered</th>
+                                <th>Total Value</th>
                                 <th>Total Meals Issued</th>
-                                <th>Paid Meals</th>
+                                <th>Half Paid Meals</th>
                                 <th>Credit Issued Meals</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {filterData().map(([empId, empName, mealId, totalOrdered, totalIssued, halfPaidMeals, creditIssuedMeals], index) => (
+                            {filterData().map(([empId, empName, companyName, departmentName, divisionName, mealId, mealPrice, totalQty, totalValue, issuedQty, halfPaidQty, fullyPaidQty], index) => (
                                 <tr key={index}>
                                     <td>{empId}</td>
                                     <td>{empName}</td>
+                                    <td>{companyName}</td>
+                                    <td>{departmentName}</td>
+                                    <td>{divisionName}</td>
                                     <td>{mealId === 1 ? "Lunch" : mealId === 2 ? "Breakfast" : mealId === 3 ? "Dinner" : "Unknown Meal"}</td>
-                                    <td>{totalOrdered}</td>
-                                    <td>{totalIssued}</td>
-                                    <td>{halfPaidMeals}</td>
-                                    <td>{creditIssuedMeals}</td>
+                                    <td>{mealPrice ? `${parseFloat(mealPrice).toFixed(2)}` : 'N/A'}</td>
+                                    <td>{totalQty}</td>
+                                    <td>{totalValue ? `${parseFloat(totalValue).toFixed(2)}` : 'N/A'}</td>
+                                    <td>{issuedQty}</td>
+                                    <td>{halfPaidQty}</td>
+                                    <td>{fullyPaidQty}</td>
                                 </tr>
                             ))}
                         </tbody>
