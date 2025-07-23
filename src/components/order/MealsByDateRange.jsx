@@ -145,7 +145,7 @@ const MealsByDateRange = () => {
                             <tr>
                                 <th>Employee No</th>
                                 <th>Employee Name</th>
-                                <th>Company</th>
+                                <th>Company Name</th>
                                 <th>Department</th>
                                 <th>Division</th>
                                 <th>Meal Type</th>
